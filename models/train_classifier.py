@@ -23,6 +23,8 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.metrics import classification_report
 from sklearn.svm import LinearSVC
+from sklearn.preprocessing import MinMaxScaler #if its a dense matrix else use MaxAbsScaler in case of sparse matrix
+scaler = MinMaxScaler()
 
 url_regex = 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
 
@@ -142,6 +144,8 @@ def main():
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
         
         with parallel_backend('multiprocessing'):
         
